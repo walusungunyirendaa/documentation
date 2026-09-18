@@ -1,3 +1,7 @@
+---
+title: "Design"
+---
+
 # Design Resources
 
 The Bloom design resources contain the materials used during the design and development of the platform.

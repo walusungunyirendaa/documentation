@@ -1,3 +1,7 @@
+---
+title: "Glossary"
+---
+
 # Glossary
 
 This page defines terms used throughout the Bloom technical documentation.

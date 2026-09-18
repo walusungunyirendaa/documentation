@@ -1,3 +1,7 @@
+---
+title: "Frontend Web"
+---
+
 # Administrative Dashboard
 
 ## 1. Overview

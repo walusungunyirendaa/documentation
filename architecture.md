@@ -1,3 +1,7 @@
+---
+title: "Architecture"
+---
+
 # Bloom System Architecture
 
 ![Bloom System Architecture](assets/sad.png)
@@ -235,10 +239,13 @@ For mobile users, the general flow is:
 ```text
 Mother / Caregiver / CHP
           │
+          v
      Mobile App
           │
+          v
      Bloom API
           │
+          v
      PostgreSQL
 ```
 
@@ -247,10 +254,13 @@ For administrators:
 ```text
 Administrator
       │
+      v
 Admin Dashboard
       │
+      v
   Bloom API
       │
+      v
   PostgreSQL
 ```
 
@@ -267,11 +277,14 @@ The general flow is:
 ```text
 Mobile Application
         │
-        │ Location data
+        │Location data
+        v
    Location API
         │
+        v
  Location Service
         │
+        v
     Database
 ```
 

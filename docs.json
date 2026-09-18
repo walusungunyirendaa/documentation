@@ -3,18 +3,59 @@
   "theme": "mint",
   "name": "BSA Task 1",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#81033E",
+    "light": "#FFC3D6",
+    "dark": "#65022F"
   },
-  "favicon": "/favicon.svg",
+  "favicon": {
+    "light": "/assets/logo.png",
+    "dark": "/assets/logo.png"
+  },
   "navigation": {
     "pages": [
       {
         "group": "Getting Started",
         "pages": [
           "index",
-          "quickstart"
+          "platform-overview",
+          "quickstart",
+          {
+            "group": "Architecture & Design",
+            "pages": [
+              "design",
+              "architecture",
+              "database"
+            ]
+          },
+          {
+            "group": "Applications",
+            "pages": [
+              "frontend-web",
+              "mobile",
+              "informational-website"
+            ]
+          },
+          {
+            "group": "Backend & Integrations",
+            "pages": [
+              "backend-api",
+              "integrations"
+            ]
+          },
+          {
+            "group": "Development & Quality",
+            "pages": [
+              "qa",
+              "development"
+            ]
+          },
+          {
+            "group": "Security & Reference",
+            "pages": [
+              "glossary",
+              "security"
+            ]
+          }
         ]
       }
     ],
@@ -34,8 +75,8 @@
     }
   },
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "light": "/images/logo(1).png",
+    "dark": "/images/logo(1).png"
   },
   "navbar": {
     "links": [
@@ -65,9 +106,18 @@
   "footer": {
     "socials": {
       "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
+      "github": "https://github.com/akirachix/Spyhive_Technical_Documentation",
       "linkedin": "https://linkedin.com/company/mintlify"
     }
   },
-  "description": "This project involves migrating and improving an existing technical documentation site using Mintlify. We are restructuring the documentation into clear, user-focused sections, improving navigation and readability, and using Mintlify's GitHub-based workflow to manage and publish changes. We will also evaluate alternative documentation platforms, explore Mintlify's AI capabilities, and demonstrate how the published documentation can be accessed through MCP."
+  "description": "This project involves migrating and improving an existing technical documentation site using Mintlify. We are restructuring the documentation into clear, user-focused sections, improving navigation and readability, and using Mintlify's GitHub-based workflow to manage and publish changes. We will also evaluate alternative documentation platforms, explore Mintlify's AI capabilities, and demonstrate how the published documentation can be accessed through MCP.",
+  "background": {
+    "color": {
+      "light": "#FAF6EB",
+      "dark": "#1A0B12"
+    }
+  },
+  "appearance": {
+    "default": "system"
+  }
 }

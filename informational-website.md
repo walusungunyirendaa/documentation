@@ -1,3 +1,7 @@
+---
+title: "Informational Website"
+---
+
 # Informational Website
 
 #**1. Overview**
@@ -14,14 +18,13 @@ The informational website is separate from the authenticated administrative dash
 Visitor
 
        |
-
        |
-
+       V
 Informational Website
 
        |
-
        |
+       V
 
 Bloom Platform Information
 ```

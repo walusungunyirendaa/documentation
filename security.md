@@ -1,3 +1,6 @@
+---
+title: "Security"
+---
 
 Bloom applies cybersecurity measures to protect user accounts, sensitive maternal health information, API endpoints, and administrative functionality.
 

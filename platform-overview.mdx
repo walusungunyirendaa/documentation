@@ -1,0 +1,66 @@
+---
+title: "Platform Overview"
+description: "An overview of Bloom's platform components, users, and technical architecture."
+---
+
+# Overview
+
+Bloom is a connected maternal health platform developed by the Spyhive team. The platform brings together several technical components that work together to support its users.
+
+## Platform Components
+
+Bloom consists of the following main components:
+
+### Mobile Application
+
+The Bloom mobile application is built with Flutter and provides functionality for mothers, caregivers, and Community Health Promoters (CHPs).
+
+### Backend API
+
+The backend provides the services that support the Bloom applications. It is built using FastAPI and handles application logic, authentication, data processing, and communication with the database.
+
+### Administrative Dashboard
+
+The administrative dashboard provides functionality for administrators to manage and monitor the platform.
+
+### Database
+
+Bloom uses PostgreSQL for persistent data storage. The backend communicates with the database to store and retrieve application data.
+
+### Informational Website
+
+Bloom also includes a public-facing informational website that provides information about the platform.
+
+## User Roles
+
+The platform documentation identifies four main user roles:
+
+- **Mother** — a primary user of the Bloom mobile application.
+- **Caregiver** — a user who supports mothers through the platform.
+- **Community Health Promoter (CHP)** — a health worker who uses Bloom to support assigned mothers.
+- **Administrator** — a user who manages platform functionality through the administrative dashboard.
+
+## High-Level Architecture
+
+The Bloom platform follows a client-server architecture.
+
+The mobile application and administrative dashboard communicate with the backend through APIs. The backend handles application logic and communicates with the PostgreSQL database.
+
+```text
+Mobile Application
+        |
+        v
+    Backend API
+        |
+        v
+    PostgreSQL
+
+
+Administrative Dashboard
+        |
+        v
+    Backend API
+        |
+        v
+    PostgreSQL
+```

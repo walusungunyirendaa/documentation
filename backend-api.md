@@ -1,3 +1,6 @@
+---
+title: "Backend API"
+---
 
 ## 1. Overview
 
@@ -657,527 +660,7 @@ Invalid requests should be rejected before invalid data reaches the database lay
 
 FastAPI can return validation errors using HTTP `422`.
 
----
-
-## 10. PostgreSQL Database
-
-PostgreSQL is the primary relational database used by Bloom.
-
-The database stores information required by:
-
-* The mobile application.
-* The administrative dashboard.
-* Backend services.
-
-Client applications do not connect directly to PostgreSQL.
-
-All database operations pass through the backend.
-
-```text
-Mobile Application
-        |
-        v
-     Bloom API
-        |
-        v
-     Backend
-        |
-        v
-   PostgreSQL
-```
-
----
-
-## 11. SQLAlchemy
-
-SQLAlchemy is the Object-Relational Mapper (ORM) used by the backend.
-
-Instead of writing SQL queries for every database operation, SQLAlchemy allows database tables to be represented as Python classes.
-
-For example:
-
-```python
-class User(Base):
-    __tablename__ = "users"
-```
-
-The class represents the `users` database table.
-
-SQLAlchemy provides:
-
-* Table mapping.
-* Column definitions.
-* Relationships.
-* Foreign keys.
-* Database queries.
-* Transactions.
-* Database sessions.
-
-The models inherit from the project's SQLAlchemy `Base`:
-
-```python
-from database import Base
-```
-
----
-
-## 12. SQLAlchemy Data Types
-
-The backend uses SQLAlchemy data types to define the structure of PostgreSQL columns.
-
-### UUID
-
-UUIDs are used as primary identifiers for many entities.
-
-Example:
-
-```python
-user_id = Column(
-    UUID(as_uuid=True),
-    primary_key=True,
-    default=uuid4
-)
-```
-
-UUIDs provide unique identifiers without relying on sequential integer IDs.
-
----
-
-### String
-
-Strings are used for text fields with defined maximum lengths.
-
-Example:
-
-```python
-first_name = Column(String(100), nullable=False)
-```
-
-Examples of fields using strings include:
-
-* First name.
-* Last name.
-* Email.
-* Phone number.
-* Location name.
-* CHP code.
-
----
-
-### Text
-
-`Text` is used for longer text content.
-
-The maternal health tip model uses:
-
-```python
-content = Column(Text, nullable=False)
-```
-
-This allows longer health information to be stored than a short fixed-length string field.
-
----
-
-### Integer
-
-Integers are used for whole-number values.
-
-For example:
-
-```python
-pregnancy_week = Column(Integer, nullable=False)
-```
-
-The symptom log also uses an integer for duration.
-
----
-
-### Float
-
-Floating-point numbers are used for geographic coordinates.
-
-The location model uses:
-
-```python
-latitude = Column(Float, nullable=False)
-longitude = Column(Float, nullable=False)
-```
-
----
-
-### Boolean
-
-Boolean fields represent true/false states.
-
-For example:
-
-```python
-caregiver_waiting = Column(Boolean, default=False, nullable=False)
-```
-
-Another example is:
-
-```python
-is_deleted = Column(
-    Boolean,
-    nullable=False,
-    default=False,
-    server_default="false"
-)
-```
-
----
-
-### Date
-
-`Date` is used when only a calendar date is required.
-
-Maternal profiles use dates for:
-
-```text
-lmp_date
-due_date
-delivery_date
-```
-
----
-
-### DateTime
-
-`DateTime` is used when both date and time are required.
-
-Examples include:
-
-```text
-created_at
-scheduled_time
-log_date
-triggered_at
-linked_at
-unlinked_at
-share_code_expires_at
-```
-
----
-
-### Enum
-
-Enums restrict a database field to a predefined set of values.
-
-For example, the user role is represented using:
-
-```python
-class UserRole(str, PyEnum):
-    ADMIN = "admin"
-    CHP = "chp"
-    MOTHER = "mother"
-```
-
-The database column then uses:
-
-```python
-role = Column(
-    Enum(UserRole, name="user_role_enum", create_type=True),
-    nullable=False
-)
-```
-
-This prevents arbitrary role values from being stored.
-
----
-
-### ARRAY
-
-PostgreSQL array types are supported through SQLAlchemy.
-
-The care schedule uses:
-
-```python
-scheduled_time = Column(
-    ARRAY(DateTime),
-    nullable=False
-)
-```
-
-The symptom log uses:
-
-```python
-symptoms_logged = Column(
-    ARRAY(UUID(as_uuid=True)),
-    nullable=False,
-    default=list
-)
-```
-
-This allows multiple datetime values or multiple symptom UUIDs to be stored in a single field.
-
----
-
-## 13. Database Relationships
-
-SQLAlchemy relationships and foreign keys connect related entities.
-
-For example, a maternal profile references a user:
-
-```python
-user_id = Column(
-    UUID(as_uuid=True),
-    ForeignKey(
-        "users.user_id",
-        ondelete="CASCADE"
-    ),
-    nullable=False,
-    unique=True,
-    index=True
-)
-```
-
-This creates a relationship between:
-
-```text
-User
- |
- | user_id
- v
-Maternal Profile
-```
-
-A symptom log item references a maternal profile:
-
-```text
-Maternal Profile
-       |
-       | profile_id
-       v
-Symptom Log Item
-```
-
-A care schedule also references the maternal profile:
-
-```text
-Maternal Profile
-       |
-       | profile_id
-       v
-Care Schedule
-```
-
-Locations are associated with users:
-
-```text
-Location
-    |
-    | location_id
-    v
-User
-```
-
----
-
-## 14. Cascade and Referential Integrity
-
-Foreign keys are used to maintain relationships between database records.
-
-Some relationships use:
-
-```python
-ondelete="CASCADE"
-```
-
-For example, the maternal profile references the user with cascade deletion.
-
-This means that when the parent record is deleted, dependent records can also be removed according to the database relationship.
-
-The user location relationship uses:
-
-```python
-ondelete="RESTRICT"
-```
-
-This prevents deletion of a referenced location when dependent user records still exist.
-
-These rules help maintain database integrity.
-
----
-
-## 15. Database Models
-
-The main models currently documented for the Bloom backend are:
-
-```text
-models/
-├── user.py
-├── location.py
-├── maternal_profile.py
-├── symptom.py
-├── symptom_log_item.py
-├── care_schedule.py
-└── maternal_tip.py
-```
-
-Each model represents a database entity.
-
-### User
-
-Table:
-
-```text
-users
-```
-
-Main fields include:
-
-```text
-user_id
-location_id
-first_name
-last_name
-role
-chp_code
-device_token
-phone_number
-email
-hashed_password
-user_status
-created_at
-is_deleted
-```
-
----
-
-### Location
-
-Table:
-
-```text
-locations
-```
-
-Main fields:
-
-```text
-location_id
-location_name
-latitude
-longitude
-created_at
-```
-
----
-
-### Maternal Profile
-
-Table:
-
-```text
-maternal_profiles
-```
-
-Main fields:
-
-```text
-profile_id
-user_id
-chp_code
-caregiver_name
-caregiver_phone
-caregiver_device_token
-lmp_date
-due_date
-delivery_date
-status
-share_code
-share_code_expires_at
-caregiver_waiting
-linked_at
-unlinked_at
-```
-
----
-
-### Symptom
-
-Table:
-
-```text
-symptoms
-```
-
-Main fields:
-
-```text
-symptom_id
-condition_name
-symptom_description
-```
-
----
-
-### Symptom Log Item
-
-Table:
-
-```text
-symptom_log_items
-```
-
-Main fields:
-
-```text
-log_item_id
-symptoms_logged
-profile_id
-log_date
-duration
-severity
-risk_status
-triggered_at
-```
-
----
-
-### Care Schedule
-
-Table:
-
-```text
-care_schedules
-```
-
-Main fields:
-
-```text
-care_schedule_id
-profile_id
-type
-scheduled_time
-frequency
-status
-```
-
----
-
-### Maternal Health Tip
-
-Table:
-
-```text
-maternal_health_tips
-```
-
-Main fields:
-
-```text
-tip_id
-title
-content
-pregnancy_week
-created_at
-```
-
----
-
-## 16. Authentication and User Roles
+## 10. Authentication and User Roles
 
 The backend supports different user roles.
 
@@ -1206,7 +689,7 @@ The client provides authentication information with API requests, and the backen
 
 ---
 
-## 17. User Account Status
+## 11. User Account Status
 
 Users also have an account status.
 
@@ -1246,7 +729,7 @@ This allows the application to distinguish between active records and records th
 
 ---
 
-## 18. Maternal Profile Status
+## 12. Maternal Profile Status
 
 Maternal profiles contain a pregnancy status.
 
@@ -1264,7 +747,7 @@ This allows the application to determine the current state of a maternal profile
 
 ---
 
-## 19. Symptom Risk and Alert States
+## 13. Symptom Risk and Alert States
 
 Symptom log records contain severity and risk status.
 
@@ -1308,7 +791,7 @@ The exact transition rules are implemented by the application services.
 
 ---
 
-## 20. Care Schedule and Reminders
+## 14. Care Schedule and Reminders
 
 Care schedules allow the backend to store scheduled maternal-care activities.
 
@@ -1339,7 +822,7 @@ A schedule can contain multiple scheduled datetime values because `scheduled_tim
 
 ---
 
-## 21. Environment Configuration
+## 15. Environment Configuration
 
 Backend configuration should be stored through environment variables rather than hard-coded credentials.
 
@@ -1366,7 +849,7 @@ The exact environment variables used by the current backend should be taken from
 
 ---
 
-## 22. Database Configuration
+## 16. Database Configuration
 
 Database functionality is provided through:
 
@@ -1408,7 +891,7 @@ PostgreSQL
 
 ---
 
-## 23. API Documentation
+## 17. API Documentation
 
 FastAPI automatically generates API documentation from the registered routes, request schemas, response schemas, and endpoint definitions.
 
@@ -1439,7 +922,7 @@ The Swagger documentation should be treated as the authoritative list of current
 
 ---
 
-## 24. API Testing
+## 18. API Testing
 
 The backend API is tested using Postman and FastAPI's Swagger UI.
 
@@ -1478,7 +961,7 @@ Swagger UI is useful during development because it allows developers to test API
 
 ---
 
-## 25. API Error Handling
+## 19. API Error Handling
 
 The API should return appropriate HTTP status codes based on the result of a request.
 
@@ -1500,7 +983,7 @@ FastAPI handles validation errors and allows application code to return appropri
 
 ---
 
-## 26. API Data Flow
+## 20. API Data Flow
 
 A typical request follows this architecture:
 
@@ -1549,7 +1032,7 @@ This separation makes it possible to keep:
 
 ---
 
-## 27. Backend Project Structure
+## 21. Backend Project Structure
 
 The backend follows a modular structure.
 
@@ -1600,7 +1083,7 @@ The exact filenames and directories should follow the current repository structu
 
 ---
 
-## 28. Backend and Client Separation
+## 22. Backend and Client Separation
 
 The Bloom architecture separates client applications from backend and database operations.
 
@@ -1640,7 +1123,7 @@ Neither the mobile application nor the dashboard needs direct database credentia
 
 ---
 
-## 29. Backend Deployment
+## 23. Backend Deployment
 
 The backend is deployed separately from the mobile application, dashboard, and informational website.
 
@@ -1676,7 +1159,7 @@ Sensitive configuration values should be stored as Heroku environment/configurat
 
 ---
 
-## 30. Local Backend Setup
+## 24. Local Backend Setup
 
 A developer setting up the backend locally should follow these general steps.
 
@@ -1740,7 +1223,7 @@ The Swagger interface can then be used to inspect and test the registered endpoi
 
 ---
 
-## 31. Database Development Workflow
+## 25. Database Development Workflow
 
 When working with database functionality, developers should follow the application architecture instead of accessing PostgreSQL directly from the client applications.
 
@@ -1769,151 +1252,7 @@ Changes to database models should be handled carefully because they affect the P
 
 ---
 
-## 32. API Endpoint Reference
-
-The backend endpoint reference should be generated from the registered FastAPI routers.
-
-The main endpoint groups correspond to:
-
-```text
-Users
-Locations
-Maternal Profiles
-Symptoms
-Symptom Logs
-Care Schedules
-Maternal Health Tips
-Analytics
-```
-
-For the exact:
-
-* HTTP method.
-* URL path.
-* Path parameters.
-* Query parameters.
-* Request body.
-* Authentication requirement.
-* Response schema.
-* Status codes.
-
-developers should use the current Swagger documentation:
-
-```text
-/docs
-```
-
-This prevents the technical documentation from becoming inconsistent with the actual registered API routes.
-
----
-
-## 33. Development Practices
-
-Backend development should follow a separation of responsibilities.
-
-### Routers
-
-Routers handle API communication.
-
-```text
-Request
-  |
-  v
-Router
-```
-
-### Services
-
-Services handle business logic.
-
-```text
-Router
-  |
-  v
-Service
-```
-
-### Models
-
-Models represent database entities.
-
-```text
-Service
-  |
-  v
-Model
-```
-
-### Database
-
-The database layer handles database connectivity.
-
-```text
-Model
-  |
-  v
-SQLAlchemy
-  |
-  v
-PostgreSQL
-```
-
-This separation makes the application easier to maintain and test.
-
----
-
-## 34. Security Considerations
-
-The backend is responsible for protecting application data and controlling access to protected resources.
-
-Important security responsibilities include:
-
-* Authentication.
-* Authorization.
-* User role enforcement.
-* Password protection.
-* Database access control.
-* Environment variable protection.
-* Input validation.
-* API error handling.
-* Protection of sensitive user information.
-
-Passwords should not be stored as plain text.
-
-The user model stores:
-
-```text
-hashed_password
-```
-
-rather than a plaintext password.
-
-Sensitive environment values should also never be committed to the source repository.
-
----
-
-## 35. Backend Testing Checklist
-
-Before considering a backend change complete, verify:
-
-* API endpoint responds correctly.
-* Request validation works.
-* Required fields are enforced.
-* Invalid data is rejected.
-* Authentication is enforced where required.
-* Authorization rules are respected.
-* Database records are created correctly.
-* Database relationships remain valid.
-* Updates modify the expected records.
-* Deletes follow the configured foreign-key rules.
-* Correct HTTP status codes are returned.
-* API responses match the expected schema.
-* Swagger documentation reflects the endpoint.
-* Postman tests pass.
-
----
-
-## 36. Troubleshooting
+## 26. Troubleshooting
 
 ### FastAPI does not start
 
@@ -1965,7 +1304,7 @@ Check that:
 
 ---
 
-## 37. Related Documentation
+## 27. Related Documentation
 
 * [Architecture](architecture.md)
 * [Database](database.md)

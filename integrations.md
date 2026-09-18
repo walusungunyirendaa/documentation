@@ -1,4 +1,6 @@
-# Integrations
+---
+title: "Integrations"
+---
 
 ## 1. Overview
 

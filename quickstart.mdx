@@ -1,47 +1,50 @@
 ---
 title: "Quickstart"
-description: "Begin with a guide on the fastest path to a successful outcome"
+description: "Get the Bloom backend running locally"
 ---
 
-Describe how someone begins using your product. What is the first thing they need to do? Are there any prerequisites?
-
-A quickstart should take someone from zero to using your product. They'll get a quick win and a sense of what they can accomplish.
+This guide gets a developer from a fresh clone to a running, testable API in a few minutes.
 
 ## Prerequisites
 
 Before you begin, you must have:
 
-- Requirement one (for example, Node.js 18+, a free account, an API key)
-- Requirement two (for example, a compatible device, a compatible browser, a compatible operating system)
+- Python 3.x installed
+- PostgreSQL installed and running
+- Git installed
 
 ## Get started
 
 <Steps>
   <Step title="Install">
-    Describe how to install your product or sign up.
+    Clone the repository and set up a virtual environment.
 
     ```bash
-    npm install your-package
+        git clone <repository-url>
+        cd backend
+        python -m venv venv
+        source venv/bin/activate
+        pip install -r requirements.txt
     ```
   </Step>
   <Step title="Configure">
-    Describe any setup or configuration needed before first use.
+    Copy the example environment file and fill in your own values (database credentials, secret keys, etc.). Make sure PostgreSQL is running and the connection details match what's in your `.env` file.
 
     ```bash
-    your-cli init
+        cp .env.example .env
     ```
   </Step>
   <Step title="Run it">
-    Show the first thing a user does to see it working.
+    Start the FastAPI server, then open the interactive API docs to inspect and test every registered endpoint.
 
     ```bash
-    your-cli start
+        uvicorn main:app --reload
     ```
+
+    Visit `http://localhost:8000/docs` to see it running.
   </Step>
 </Steps>
 
 <Tip>
-  Give people a way to get help. This could be a link to a support page, a chat with a customer support agent, or a forum for your product.
-
-  Example: Need help? Reach out to us at [support@yourcompany.com](mailto:support@yourcompany.com).
+  Need help? Open an issue in the project's GitHub repository.
 </Tip>

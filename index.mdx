@@ -1,9 +1,81 @@
 ---
 title: "Introduction"
-description: "Welcome to your project"
+description: "Explore Bloom's architecture, components, development workflow, security, integrations, and technical resources."
 ---
 
-Write a short description of your product here. What it does, who it's for, and what they can accomplish with it.
+# Bloom
+
+Welcome to the technical documentation for **Bloom**, a connected maternal health platform developed by the Spyhive team.
+
+Bloom brings together a mobile application, backend API, administrative dashboard, database, and informational website into a connected platform. The system is designed to support mothers, caregivers, Community Health Promoters (CHPs), and administrators.
+
+This documentation explains how the Bloom platform is structured, how its components communicate, and how developers can work with and maintain the system.
+
+## What is Bloom?
+
+Bloom is a maternal health platform that connects users with maternal health-related functionality through a mobile application while providing administrative functionality through a web dashboard.
+
+The main components of Bloom are:
+
+- **Mobile Application** — a Flutter-based application used by mothers, caregivers, and Community Health Promoters (CHPs).
+- **Backend API** — a FastAPI-based backend responsible for application logic, authentication, data processing, and communication with the database.
+- **Administrative Dashboard** — a web application used by administrators to manage users, content, metrics, safety alerts, and account settings.
+- **PostgreSQL Database** — the database used for persistent application data.
+- **Informational Website** — a public-facing website providing information about Bloom and its services.
+
+## Who is Bloom for?
+
+Bloom supports several user roles:
+
+### Mothers
+
+Mothers are the primary users of the Bloom mobile application. The platform provides functionality such as maternal profile management, symptom logging, care schedules, reminders, maternal health tips, and alerts.
+
+### Caregivers
+
+Caregivers can access relevant information about the mothers they support through the functionality provided by Bloom.
+
+### Community Health Promoters
+
+Community Health Promoters (CHPs) can use Bloom to support assigned mothers and access functionality relevant to their role.
+
+### Administrators
+
+Administrators use the Bloom administrative dashboard to manage users, content, platform metrics, safety alerts, and administrator account settings.
+
+## How Bloom works
+
+Bloom follows a client-server architecture.
+
+The mobile application and administrative dashboard communicate with the backend through APIs. The backend processes requests and communicates with PostgreSQL for persistent data storage.
+
+```text
+Mother / Caregiver / CHP
+          |
+          v
+    Bloom Mobile
+          |
+          | HTTP API
+          v
+    Bloom Backend
+          |
+          | Database Operations
+          v
+      PostgreSQL
+
+
+Administrator
+          |
+          v
+   Admin Dashboard
+          |
+          | HTTP API
+          v
+    Bloom Backend
+          |
+          v
+      PostgreSQL
+```
 
 <Tip>
   Ready to make this your own? Start by editing this page. Update your `docs.json` file to customize your site. Then fill out the [Quickstart](/quickstart) page.
